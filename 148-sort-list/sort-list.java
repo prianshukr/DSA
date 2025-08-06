@@ -9,30 +9,41 @@
  * }
  */
 class Solution {
-    public int size(ListNode head){
-        ListNode temp = head;
-        int size = 0;
-        while(temp != null){
-            size++;
-            temp = temp.next;
-        }
-        return size;
-    }
     public ListNode sortList(ListNode head) {
-        ListNode temp = head;
-        int [] arr = new int [size(head)];
-        
-        for(int i=0;i<arr.length;i++){
-            arr[i] = temp.val;
-            temp = temp.next;
+        if(head == null || head.next == null) return head;
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode prev = null;
+        while(fast!= null && fast.next!= null){
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
         }
-
-        Arrays.sort(arr);
-        temp = head;
-        for(int i=0;i<arr.length;i++){
-            temp.val = arr[i];
-            temp = temp.next;
-        }
-        return head;
+        prev.next = null;
+        ListNode head1 = sortList(head);
+        ListNode head2 = sortList(slow);
+        ListNode ans = merge(head1,head2);
+        return ans;
     }
+    static ListNode merge(ListNode head1 , ListNode head2){
+    ListNode dummy = new ListNode(-1);
+    ListNode tail = dummy;
+
+    while(head1 != null && head2 != null){
+        if(head1.val <= head2.val){
+            tail.next = head1;
+            head1 = head1.next;
+        } else {
+            tail.next = head2;
+            head2 = head2.next;
+        }
+        tail = tail.next;
+    }
+
+    if(head1 != null) tail.next = head1;
+    if(head2 != null) tail.next = head2;
+
+    return dummy.next;
+}
+
 }
