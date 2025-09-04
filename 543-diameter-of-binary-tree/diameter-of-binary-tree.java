@@ -14,16 +14,23 @@
  * }
  */
 class Solution {
+    private int diameter = 0;
+
     public int diameterOfBinaryTree(TreeNode root) {
-        int[] maxi = new int[1];
-        findHeight(root , maxi);
-        return maxi[0];
+        height(root);
+        return diameter;
     }
-    public static int findHeight(TreeNode root , int[] maxi){
-        if(root == null) return 0;
-        int leftH = findHeight(root.left,maxi);
-        int rightH = findHeight(root.right,maxi);
-        maxi[0] = Math.max(maxi[0] , leftH+rightH);
-        return 1+Math.max(leftH , rightH);
+
+    // Helper function to calculate height and update diameter
+    private int height(TreeNode node) {
+        if (node == null) return 0;
+
+        int left = height(node.left);
+        int right = height(node.right);
+
+        // update diameter (longest path through this node)
+        diameter = Math.max(diameter, left + right);
+
+        return Math.max(left, right) + 1;
     }
 }
